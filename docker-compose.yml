@@ -1,0 +1,13 @@
+version: "3.10"
+services:
+  fastapi_postgres_db:
+    container_name: postgres_container_fAPI
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
