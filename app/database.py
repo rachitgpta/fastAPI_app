@@ -4,9 +4,10 @@ from sqlalchemy.orm import sessionmaker
 
 SQLACHEMY_DATABASE_URL = 'postgresql://postgres:password@localhost/fastapi'
 engine = create_engine(SQLACHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind= engine)
+SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 
 Base = declarative_base()
+
 
 # Dependency
 def get_db():
