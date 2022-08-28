@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends, HTTPException, APIRouter, Response
 from sqlalchemy.orm import Session
@@ -21,8 +21,8 @@ def get_posts(id: int, db: Session = Depends(get_db), current_user: User = Depen
 
 
 @router.get("/", response_model=List[Post])
-def get_posts(db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):
-    posts = db.query(models.Post).all()
+def get_posts(db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user), limit=10, search: Optional[str] = ''):
+    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).all()
     return posts
 
 
@@ -46,7 +46,7 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user: User = Dep
         post_query.delete(synchronize_session=False)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
-    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail = f"Not Authorised to perform requested action")
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Not Authorised to perform requested action")
 
 
 @router.put("/{id}", response_model=Post)
@@ -57,6 +57,6 @@ def update_post(id: int, new_post: PostCreate, db: Session = Depends(get_db),
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with ID:{id} does not exists ")
     if post.owner_id == current_user.id:
-        post_query.update(new_post.dict(),synchronize_session=False)
+        post_query.update(new_post.dict(), synchronize_session=False)
         db.commit()
     return post
