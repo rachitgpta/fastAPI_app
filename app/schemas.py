@@ -38,8 +38,10 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     id: Optional[str]
+
 
 class Post(PostBase):
     id: int
@@ -50,6 +52,15 @@ class Post(PostBase):
     class Config:
         orm_mode = True
 
+
 class Vote(BaseModel):
     post_id: int
-    dir : conint(le=1)
+    dir: conint(le=1)
+
+
+class PostOut(BaseModel):
+    Post: Post  # this should match the name of field returned by Query
+    votes: int
+
+    class Config:
+        orm_mode = True

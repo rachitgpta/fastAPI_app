@@ -1,1 +1,4 @@
 app/env.txt
+postgres
+__pycache__
+.idea
