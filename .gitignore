@@ -2,3 +2,4 @@ app/env.txt
 postgres
 __pycache__
 .idea
+.pytest_cache
